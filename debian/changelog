@@ -1,0 +1,197 @@
+ros-rolling-openni2-camera (2.1.0-2noble) noble; urgency=high
+
+  * implement proper lazy subscribers (#136 <https://github.com/ros-drivers/openni2_camera/issues/136>)
+    Fixes #119 <https://github.com/ros-drivers/openni2_camera/issues/119>, works in Jazzy and later
+  * publish tfs and set matching frame names (#135 <https://github.com/ros-drivers/openni2_camera/issues/135>)
+    This PR ports the TFs from original
+    [kinect_frames.launch](https://github.com/ros-drivers/rgbd_launch/blob/noetic-devel/launch/kinect_frames.launch)
+    to the ROS 2 launch files and sets the image frame names appropriately.
+  * Depth-only point cloud launch file for Non-RGB PrimeSense device. (#132 <https://github.com/ros-drivers/openni2_camera/issues/132>)
+  * Contributors: Christian Rauch, Michael Ferguson, TinLethax
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 14 Feb 2024 00:00:00 -0000
+
+ros-rolling-openni2-camera (2.0.2-2noble) noble; urgency=high
+
+  * add depth_image_proc exec dep (#131 <https://github.com/ros-drivers/openni2_camera/issues/131>)
+    Needed when starting the camera with point cloud processing.
+  * Contributors: Mario Prats
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 26 Apr 2023 00:00:00 -0000
+
+ros-rolling-openni2-camera (2.0.1-2noble) noble; urgency=high
+
+  * fix device time (#129 <https://github.com/ros-drivers/openni2_camera/issues/129>)
+  * add build depend on pkg-config (#128 <https://github.com/ros-drivers/openni2_camera/issues/128>)
+  * Contributors: Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Thu, 02 Mar 2023 00:00:00 -0000
+
+ros-rolling-openni2-camera (2.0.0-2noble) noble; urgency=high
+
+  * revive the test wrapper (#127 <https://github.com/ros-drivers/openni2_camera/issues/127>)
+    resolves #123 <https://github.com/ros-drivers/openni2_camera/issues/123>
+  * remove boost and unused files (#122 <https://github.com/ros-drivers/openni2_camera/issues/122>)
+    * replace boost functionality by standard C++
+    * remove ROS nodelet metadata
+    * store parameter callback
+    * remove ROS1 node
+    * remove unused os import
+    Co-authored-by: Christian Rauch <mailto:Rauch.Christian@gmx.de>
+  * fix build, target only humble and later (#118 <https://github.com/ros-drivers/openni2_camera/issues/118>)
+  * Capability: [CI] Add GitHub Action (#116 <https://github.com/ros-drivers/openni2_camera/issues/116>)
+    * Capability: [CI] Add GitHub Action
+    * Maintenance: Update maintaner contact
+  * initial port to ROS2
+  * Contributors: Isaac I.Y. Saito, Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 01 Mar 2023 00:00:00 -0000
+
+ros-rolling-openni2-camera (1.6.0-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Tue, 12 Apr 2022 00:00:00 -0000
+
+ros-rolling-openni2-camera (1.5.1-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Mon, 01 Feb 2021 00:00:00 -0000
+
+ros-rolling-openni2-camera (1.5.0-2noble) noble; urgency=high
+
+  * [capability] Use serialnumber in camera names #101 <https://github.com/ros-drivers/openni2_camera/issues/101>
+  * Release for Noetic #98 <https://github.com/ros-drivers/openni2_camera/issues/98>
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Tue, 12 Jan 2021 00:00:00 -0000
+
+ros-rolling-openni2-camera (1.4.2-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 03 Jun 2020 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.4.2-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Sat, 01 Dec 2018 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.4.1-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Sat, 20 Oct 2018 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.4.0-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Tue, 17 Jul 2018 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.3.0-2noble) noble; urgency=high
+
+
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Fri, 03 Nov 2017 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.9-2noble) noble; urgency=high
+
+  * [fix] Device re-connection #53 <https://github.com/ros-drivers/openni2_camera/issues/53>
+  * [fix] Publish projector/camera_info (fixes disparity img) #48 <https://github.com/ros-drivers/openni2_camera/issues/48>
+  * Contributors: Isaac I.Y. Saito, Martin Guenther, Shaun Edwards
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 25 Oct 2017 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.8-2noble) noble; urgency=high
+
+  * [capability] Add exposure time control #46 <https://github.com/ros-drivers/openni2_camera/issues/46>
+  * [fix] device URI formatting #47 <https://github.com/ros-drivers/openni2_camera/issues/47>
+  * Contributors: Martin Guenther, Michael Ferguson, Sergey Alexandrov
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Thu, 17 Aug 2017 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.7-2noble) noble; urgency=high
+
+  * Merge pull request #44 <https://github.com/ros-drivers/openni2_camera/issues/44> from jacquelinekay/fix_kinetic_build
+    fix compile on kinetic
+  * Contributors: Jackie Kay, Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Tue, 07 Jun 2016 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.6-2noble) noble; urgency=high
+
+  * [fix] Compile for OSX #30 <https://github.com/ros-drivers/openni2_camera/issues/30>
+  * [fix] Crash on OSX and warning fixes.
+  * Contributors: Hans Gaiser, Isaac I.Y. Saito, Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Thu, 05 May 2016 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.5-2noble) noble; urgency=high
+
+  * Merge pull request #34 <https://github.com/ros-drivers/openni2_camera/issues/34> from Intermodalics/feature/get_serial_service
+    added get_serial service
+  * Contributors: Michael Ferguson, Ruben Smits
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Thu, 15 Oct 2015 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.4-2noble) noble; urgency=high
+
+  * proper usage of device_id parameter in resolveDeviceURI, resolve unique parts of device URIs, too
+  * print vendor id and product id as hex value (like in lsusb)
+  * Contributors: Michael Ferguson, Stephan Wirth
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Mon, 06 Apr 2015 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.3-2noble) noble; urgency=high
+
+  * Explicitly ask for serial number when trying to resolve device URI instead of doing it once on device connected, fixes #24 <https://github.com/ros-drivers/openni2_camera/issues/24>
+  * Contributors: Michael Ferguson, Stephan Wirth
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Fri, 16 Jan 2015 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.2-2noble) noble; urgency=high
+
+  * Add usb_reset
+  * Contributors: Kei Okada, Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Mon, 06 Oct 2014 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.1-2noble) noble; urgency=high
+
+  * Fixed a bug that prevents depth only sensors from properly calculating the point cloud due to incorrect focal length
+  * Updated cmakelists for OSX
+  * Contributors: Colin Lea, Michael Ferguson, Tarek Taha
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Fri, 22 Aug 2014 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.2.0-2noble) noble; urgency=high
+
+  * device_id: find camera by serial number
+  * Make freenect_stack link a real link for wiki.
+  * Contributors: Dariush Forouher, Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Thu, 22 May 2014 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.1.2-2noble) noble; urgency=high
+
+  * Fix CMake error.
+  * Contributors: Benjamin Chretien, Michael Ferguson
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Mon, 03 Feb 2014 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.1.1-2noble) noble; urgency=high
+
+  * Fixed default value of ir_mode. Thanks @nxdefiant
+    https://github.com/ros-drivers/openni2_camera/issues/16
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 13 Nov 2013 00:00:00 -0000
+
+ros-rolling-openni2-camera (0.1.0-2noble) noble; urgency=high
+
+  * initial release
+
+ -- Michael Ferguson <mike@vanadiumlabs.com>  Wed, 28 Aug 2013 00:00:00 -0000
+
+
