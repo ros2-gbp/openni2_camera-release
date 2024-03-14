@@ -1,3 +1,26 @@
+## openni2_camera (rolling) - 2.2.0-1
+
+The packages in the `openni2_camera` repository were released into the `rolling` distro by running `/usr/bin/bloom-release -r rolling -t rolling openni2_camera` on `Thu, 14 Mar 2024 22:57:32 -0000`
+
+The `openni2_camera` package was released.
+
+Version of package(s) in repository `openni2_camera`:
+
+- upstream repository: https://github.com/ros-drivers/openni2_camera.git
+- release repository: https://github.com/ros2-gbp/openni2_camera-release.git
+- rosdistro version: `2.1.0-2`
+- old version: `2.1.0-2`
+- new version: `2.2.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `1.0.0`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## openni2_camera (rolling) - 2.1.0-1
 
 The packages in the `openni2_camera` repository were released into the `rolling` distro by running `/usr/bin/bloom-release -r rolling -t rolling openni2_camera` on `Wed, 14 Feb 2024 14:05:10 -0000`
