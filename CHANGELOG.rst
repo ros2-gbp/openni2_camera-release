@@ -2,6 +2,12 @@
 Changelog for package openni2_camera
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.0 (2024-03-14)
+------------------
+* fix build on Ubuntu Noble (24.04) (`#138 <https://github.com/ros-drivers/openni2_camera/issues/138>`_)
+  add missing header
+* Contributors: Michael Ferguson
+
 2.1.0 (2024-02-14)
 ------------------
 * implement proper lazy subscribers (`#136 <https://github.com/ros-drivers/openni2_camera/issues/136>`_)
