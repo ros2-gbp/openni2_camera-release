@@ -1,0 +1,13 @@
+Source: ros-jazzy-openni2-camera
+Section: misc
+Priority: optional
+Maintainer: Michael Ferguson <mike@vanadiumlabs.com>
+Build-Depends: debhelper (>= 9.0.0), libopenni2-dev, pkg-config, ros-jazzy-ament-cmake, ros-jazzy-builtin-interfaces, ros-jazzy-camera-info-manager, ros-jazzy-image-transport, ros-jazzy-rclcpp, ros-jazzy-rclcpp-components, ros-jazzy-rosidl-default-generators, ros-jazzy-sensor-msgs, ros-jazzy-ros-workspace, ros-jazzy-rosidl-typesupport-fastrtps-c, ros-jazzy-rosidl-typesupport-fastrtps-cpp
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-jazzy-openni2-camera
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libopenni2-dev, ros-jazzy-builtin-interfaces, ros-jazzy-camera-info-manager, ros-jazzy-depth-image-proc, ros-jazzy-image-transport, ros-jazzy-rclcpp, ros-jazzy-rclcpp-components, ros-jazzy-rosidl-default-runtime, ros-jazzy-sensor-msgs, ros-jazzy-ros-workspace
+Description: Drivers for the Asus Xtion and Primesense Devices.
+ For using a kinect with ROS, try the freenect stack
