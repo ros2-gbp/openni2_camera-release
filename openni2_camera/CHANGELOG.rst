@@ -2,33 +2,34 @@
 Changelog for package openni2_camera
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.2.1 (2024-08-11)
+2.0.3 (2024-11-03)
 ------------------
-* rename depth/image_raw to depth_raw/image (`#140 <https://github.com/ros-drivers/openni2_camera/issues/140>`_)
-  Without this change, both depth/image and depth/image_raw publish the
-  same camera_info topic (depth/camera_info) - this has several issues:
-  * subscribing to either image causes both to be published along with
-  their respective camera_info
-  * remapping either camera_info, remaps both
-  * In Jazzy, it appears that the double camera_info also causes minor
-  issues with message_filters in downstream packages
-* Contributors: Michael Ferguson
-
-2.2.0 (2024-03-14)
-------------------
-* fix build on Ubuntu Noble (24.04) (`#138 <https://github.com/ros-drivers/openni2_camera/issues/138>`_)
-  add missing header
-* Contributors: Michael Ferguson
-
-2.1.0 (2024-02-14)
-------------------
-* implement proper lazy subscribers (`#136 <https://github.com/ros-drivers/openni2_camera/issues/136>`_)
-  Fixes `#119 <https://github.com/ros-drivers/openni2_camera/issues/119>`_, works in Jazzy and later
+* add dynamic parameters (backport `#141 <https://github.com/ros-drivers/openni2_camera/issues/141>`_) (`#142 <https://github.com/ros-drivers/openni2_camera/issues/142>`_)
+  In ROS 1, a number of things were dynamic - this PR re-adds them using
+  the new ROS 2 paradigm for parameter updating. I've tested this with a
+  Primesense device and am able to disable auto_exposure and
+  auto_white_balance.
 * publish tfs and set matching frame names (`#135 <https://github.com/ros-drivers/openni2_camera/issues/135>`_)
   This PR ports the TFs from original
   [`kinect_frames.launch`](https://github.com/ros-drivers/rgbd_launch/blob/noetic-devel/launch/kinect_frames.launch)
   to the ROS 2 launch files and sets the image frame names appropriately.
 * Depth-only point cloud launch file for Non-RGB PrimeSense device. (`#132 <https://github.com/ros-drivers/openni2_camera/issues/132>`_)
+  Some Depth camera based on PS1080 SoC such as Asus Xtion and (some)
+  Xtion Pro don't come with RGB camera.
+  The original 'camera_with_cloud' launch file requires the missing RGB
+  color stream, which Xtion and (some) Xtion Pro don't provide. This make
+  point cloud topic publish no message at all.
+  Solving by changing `depth_image_proc::PointCloudXyzrgbNode` to
+  `depth_image_proc::PointCloudXyzNode` and remove all RGB related topic
+  remap in launch file. Resulted in the new launch file named
+  'camera_with_cloud_norgb'. Modified from 'camera_with_cloud' launch
+  file.
+  I tested with these following device and environment
+  - Asus Xtion ([Possibly pre-production or custom made
+  unit](https://www.aliexpress.com/item/1005004788630548.html?))
+  - ROS2 Humble
+  - Ubuntu 22.04 on WSL2
+  - USBIP
 * Contributors: Christian Rauch, Michael Ferguson, TinLethax
 
 2.0.2 (2023-04-26)

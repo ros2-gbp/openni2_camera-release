@@ -139,6 +139,11 @@ void OpenNI2Driver::periodic()
     initialized_ = true;
   }
 
+  // TODO: check subscriber counts, enable cameras
+  colorConnectCb();
+  depthConnectCb();
+  irConnectCb();
+
   if (enable_reconnect_)
     monitorConnection();
 }
@@ -157,45 +162,18 @@ void OpenNI2Driver::advertiseROSTopics()
   // Asus Xtion PRO does not have an RGB camera
   if (device_->hasColorSensor())
   {
-    // Create publisher with connect callback
-    rclcpp::PublisherOptions pub_options;
-    pub_options.event_callbacks.matched_callback =
-      [this](rclcpp::MatchedInfo&)
-      {
-        colorConnectCb();
-      };
-    rmw_qos_profile_t custom_qos = rmw_qos_profile_default;
-    custom_qos.depth = 1;
-    pub_color_ = image_transport::create_camera_publisher(this, "rgb/image_raw", custom_qos, pub_options);
+    pub_color_ = it.advertiseCamera("rgb/image_raw", 1);
   }
 
   if (device_->hasIRSensor())
   {
-    // Create publisher with connect callback
-    rclcpp::PublisherOptions pub_options;
-    pub_options.event_callbacks.matched_callback =
-      [this](rclcpp::MatchedInfo&)
-      {
-        irConnectCb();
-      };
-    rmw_qos_profile_t custom_qos = rmw_qos_profile_default;
-    custom_qos.depth = 1;
-    pub_ir_ = image_transport::create_camera_publisher(this, "ir/image_raw", custom_qos, pub_options);
+    pub_ir_ = it.advertiseCamera("ir/image", 1);
   }
 
   if (device_->hasDepthSensor())
   {
-    // Create publisher with connect callback
-    rclcpp::PublisherOptions pub_options;
-    pub_options.event_callbacks.matched_callback =
-      [this](rclcpp::MatchedInfo&)
-      {
-        depthConnectCb();
-      };
-    rmw_qos_profile_t custom_qos = rmw_qos_profile_default;
-    custom_qos.depth = 1;
-    pub_depth_raw_ = image_transport::create_camera_publisher(this, "depth_raw/image", custom_qos, pub_options);
-    pub_depth_ = image_transport::create_camera_publisher(this, "depth/image", custom_qos, pub_options);
+    pub_depth_raw_ = it.advertiseCamera("depth/image_raw", 1);
+    pub_depth_ = it.advertiseCamera("depth/image", 1);
     pub_projector_info_ = this->create_publisher<sensor_msgs::msg::CameraInfo>("projector/camera_info", 1);
   }
 
@@ -234,7 +212,52 @@ rcl_interfaces::msg::SetParametersResult OpenNI2Driver::paramCb(
 {
   auto result = rcl_interfaces::msg::SetParametersResult();
 
-  RCLCPP_WARN(this->get_logger(), "parameter change callback");
+  // Assume success until we fail
+  result.successful = true;
+
+  // Apply parameters
+  for (const auto & param : parameters)
+  {
+    if (param.get_name() == "z_offset_mm")
+    {
+      z_offset_mm_ = param.as_int();
+    }
+    else if (param.get_name() == "z_scaling")
+    {
+      z_scaling_ = param.as_double();
+    }
+    else if (param.get_name() == "ir_time_offset")
+    {
+      ir_time_offset_ = param.as_double();
+    }
+    else if (param.get_name() == "color_time_offset")
+    {
+      color_time_offset_ = param.as_double();
+    }
+    else if (param.get_name() == "depth_time_offset")
+    {
+      depth_time_offset_ = param.as_double();
+    }
+    else if (param.get_name() == "auto_exposure")
+    {
+      auto_exposure_ = param.as_bool();
+    }
+    else if (param.get_name() == "auto_white_balance")
+    {
+      auto_white_balance_ = param.as_bool();
+    }
+    else if (param.get_name() == "exposure")
+    {
+      exposure_ = param.as_int();
+    }
+    else
+    {
+      RCLCPP_WARN(this->get_logger(), "Parameter %s is not settable", param.get_name().c_str());
+      result.successful = false;
+    }
+  }
+
+  applyConfigToOpenNIDevice();
   return result;
 }
 
@@ -295,11 +318,7 @@ void OpenNI2Driver::applyConfigToOpenNIDevice()
   {
     try
     {
-      //if (!config_init_ || (old_config_.depth_registration != depth_registration_))
-      if (depth_registration_)
-      {
-        device_->setImageRegistrationMode(depth_registration_);
-      }
+      device_->setImageRegistrationMode(depth_registration_);
     }
     catch (const OpenNI2Exception& exception)
     {
@@ -309,9 +328,7 @@ void OpenNI2Driver::applyConfigToOpenNIDevice()
 
   try
   {
-    //if (!config_init_ || (old_config_.color_depth_synchronization != color_depth_synchronization_))
-    if (color_depth_synchronization_)
-      device_->setDepthColorSync(color_depth_synchronization_);
+    device_->setDepthColorSync(color_depth_synchronization_);
   }
   catch (const OpenNI2Exception& exception)
   {
@@ -320,9 +337,7 @@ void OpenNI2Driver::applyConfigToOpenNIDevice()
 
   try
   {
-    //if (!config_init_ || (old_config_.auto_exposure != auto_exposure_))
-    if (auto_exposure_)
-      device_->setAutoExposure(auto_exposure_);
+    device_->setAutoExposure(auto_exposure_);
   }
   catch (const OpenNI2Exception& exception)
   {
@@ -331,9 +346,7 @@ void OpenNI2Driver::applyConfigToOpenNIDevice()
 
   try
   {
-    //if (!config_init_ || (old_config_.auto_white_balance != auto_white_balance_))
-    if (auto_white_balance_)
-      device_->setAutoWhiteBalance(auto_white_balance_);
+    device_->setAutoWhiteBalance(auto_white_balance_);
   }
   catch (const OpenNI2Exception& exception)
   {
@@ -353,7 +366,6 @@ void OpenNI2Driver::applyConfigToOpenNIDevice()
     // Setting the exposure the old way, although this should not have an effect
     try
     {
-      //if (!config_init_ || (old_config_.exposure != exposure_))
       device_->setExposure(exposure_);
     }
     catch (const OpenNI2Exception& exception)
@@ -398,6 +410,7 @@ void OpenNI2Driver::colorConnectCb()
   }
   std::lock_guard<std::mutex> lock(connect_mutex_);
 
+  // This does not appear to work
   color_subscribers_ = pub_color_.getNumSubscribers() > 0;
 
   if (color_subscribers_ && !device_->isColorStreamStarted())
@@ -450,6 +463,7 @@ void OpenNI2Driver::depthConnectCb()
   }
   std::lock_guard<std::mutex> lock(connect_mutex_);
 
+  // These does not appear to work
   depth_subscribers_ = pub_depth_.getNumSubscribers() > 0;
   depth_raw_subscribers_ = pub_depth_raw_.getNumSubscribers() > 0;
   projector_info_subscribers_ = pub_projector_info_->get_subscription_count() > 0;
@@ -479,6 +493,8 @@ void OpenNI2Driver::irConnectCb()
   }
   std::lock_guard<std::mutex> lock(connect_mutex_);
 
+  // This does not appear to work
+  // ir_subscribers_ = pub_ir_.getNumSubscribers() > 0;
   ir_subscribers_ = this->count_subscribers("ir/image") > 0 ||
                     this->count_subscribers("ir/camera_info") > 0;
 
