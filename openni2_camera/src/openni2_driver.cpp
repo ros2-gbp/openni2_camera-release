@@ -139,11 +139,6 @@ void OpenNI2Driver::periodic()
     initialized_ = true;
   }
 
-  // TODO: check subscriber counts, enable cameras
-  colorConnectCb();
-  depthConnectCb();
-  irConnectCb();
-
   if (enable_reconnect_)
     monitorConnection();
 }
@@ -162,18 +157,45 @@ void OpenNI2Driver::advertiseROSTopics()
   // Asus Xtion PRO does not have an RGB camera
   if (device_->hasColorSensor())
   {
-    pub_color_ = it.advertiseCamera("rgb/image_raw", 1);
+    // Create publisher with connect callback
+    rclcpp::PublisherOptions pub_options;
+    pub_options.event_callbacks.matched_callback =
+      [this](rclcpp::MatchedInfo&)
+      {
+        colorConnectCb();
+      };
+    rmw_qos_profile_t custom_qos = rmw_qos_profile_default;
+    custom_qos.depth = 1;
+    pub_color_ = image_transport::create_camera_publisher(this, "rgb/image_raw", custom_qos, pub_options);
   }
 
   if (device_->hasIRSensor())
   {
-    pub_ir_ = it.advertiseCamera("ir/image", 1);
+    // Create publisher with connect callback
+    rclcpp::PublisherOptions pub_options;
+    pub_options.event_callbacks.matched_callback =
+      [this](rclcpp::MatchedInfo&)
+      {
+        irConnectCb();
+      };
+    rmw_qos_profile_t custom_qos = rmw_qos_profile_default;
+    custom_qos.depth = 1;
+    pub_ir_ = image_transport::create_camera_publisher(this, "ir/image_raw", custom_qos, pub_options);
   }
 
   if (device_->hasDepthSensor())
   {
-    pub_depth_raw_ = it.advertiseCamera("depth/image_raw", 1);
-    pub_depth_ = it.advertiseCamera("depth/image", 1);
+    // Create publisher with connect callback
+    rclcpp::PublisherOptions pub_options;
+    pub_options.event_callbacks.matched_callback =
+      [this](rclcpp::MatchedInfo&)
+      {
+        depthConnectCb();
+      };
+    rmw_qos_profile_t custom_qos = rmw_qos_profile_default;
+    custom_qos.depth = 1;
+    pub_depth_raw_ = image_transport::create_camera_publisher(this, "depth_raw/image", custom_qos, pub_options);
+    pub_depth_ = image_transport::create_camera_publisher(this, "depth/image", custom_qos, pub_options);
     pub_projector_info_ = this->create_publisher<sensor_msgs::msg::CameraInfo>("projector/camera_info", 1);
   }
 
@@ -410,7 +432,6 @@ void OpenNI2Driver::colorConnectCb()
   }
   std::lock_guard<std::mutex> lock(connect_mutex_);
 
-  // This does not appear to work
   color_subscribers_ = pub_color_.getNumSubscribers() > 0;
 
   if (color_subscribers_ && !device_->isColorStreamStarted())
@@ -463,7 +484,6 @@ void OpenNI2Driver::depthConnectCb()
   }
   std::lock_guard<std::mutex> lock(connect_mutex_);
 
-  // These does not appear to work
   depth_subscribers_ = pub_depth_.getNumSubscribers() > 0;
   depth_raw_subscribers_ = pub_depth_raw_.getNumSubscribers() > 0;
   projector_info_subscribers_ = pub_projector_info_->get_subscription_count() > 0;
@@ -493,8 +513,6 @@ void OpenNI2Driver::irConnectCb()
   }
   std::lock_guard<std::mutex> lock(connect_mutex_);
 
-  // This does not appear to work
-  // ir_subscribers_ = pub_ir_.getNumSubscribers() > 0;
   ir_subscribers_ = this->count_subscribers("ir/image") > 0 ||
                     this->count_subscribers("ir/camera_info") > 0;
 
