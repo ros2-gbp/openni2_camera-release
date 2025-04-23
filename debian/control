@@ -1,0 +1,13 @@
+Source: ros-kilted-openni2-camera
+Section: misc
+Priority: optional
+Maintainer: Michael Ferguson <mike@vanadiumlabs.com>
+Build-Depends: debhelper (>= 9.0.0), libopenni2-dev, pkg-config, ros-kilted-ament-cmake, ros-kilted-builtin-interfaces, ros-kilted-camera-info-manager, ros-kilted-image-transport, ros-kilted-rclcpp, ros-kilted-rclcpp-components, ros-kilted-rosidl-default-generators, ros-kilted-sensor-msgs, ros-kilted-ros-workspace, ros-kilted-rosidl-typesupport-fastrtps-c, ros-kilted-rosidl-typesupport-fastrtps-cpp
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-kilted-openni2-camera
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libopenni2-dev, ros-kilted-builtin-interfaces, ros-kilted-camera-info-manager, ros-kilted-depth-image-proc, ros-kilted-image-transport, ros-kilted-rclcpp, ros-kilted-rclcpp-components, ros-kilted-rosidl-default-runtime, ros-kilted-sensor-msgs, ros-kilted-ros-workspace
+Description: Drivers for the Asus Xtion and Primesense Devices.
+ For using a kinect with ROS, try the freenect stack
