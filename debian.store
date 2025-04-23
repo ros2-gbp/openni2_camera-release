@@ -1,1 +1,1 @@
-{"base": "01c50a0", "parent": "debian/rolling/openni2_camera", "previous": "e67c0d7", "trim": "", "trimbase": ""}
+{"base": "dfb8dc7a3b64", "parent": "debian/kilted/openni2_camera", "previous": "ac4a6d8c822f", "trim": "", "trimbase": ""}
